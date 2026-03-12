@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>K3s Demo</title>
+</head>
+<body>
+  <h1>Frontend Running ✅</h1>
+  <button onclick="callApi()">Call Backend</button>
+
+  <p id="result"></p>
+
+  <script>
+    async function callApi() {
+      const res = await fetch("/api");
+      const data = await res.json();
+      document.getElementById("result").innerText = data.message;
+    }
+  </script>
+</body>
+</html>
