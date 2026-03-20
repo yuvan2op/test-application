@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.frontend.name }}                # ⭐ CHANGE APP NAME
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name }}              # ⭐ CHANGE SAME NAME
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name }}            # ⭐ CHANGE SAME NAME
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: {{ .Values.frontend.name }}         # ⭐ CHANGE
+          image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}   # ⭐ CHANGE IMAGE
+          ports:
+            - containerPort: {{ .Values.frontend.containerPort }}                 # ⭐ CHANGE
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.frontend.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10

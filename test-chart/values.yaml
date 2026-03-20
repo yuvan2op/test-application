@@ -1,0 +1,26 @@
+backend:
+  name: backend
+  replicaCount: 2
+  image:
+    repository: yuvan2op/test-backend
+    tag: latest
+  containerPort: 3000
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30008
+
+frontend:
+  name: frontend
+  replicaCount: 2
+  image:
+    repository: yuvan2op/test-frontend
+    tag: latest
+  containerPort: 80
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30007
+ingress:
+  enabled: false
+  host: test.local

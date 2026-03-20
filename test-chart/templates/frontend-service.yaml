@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-frontend-service          # ⭐ CHANGE
+spec:
+  type: {{ .Values.frontend.service.type }}
+  selector:
+    app: {{ .Values.frontend.name }}                 # ⭐ MUST MATCH LABEL
+  ports:
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.containerPort }}
+      nodePort: {{ .Values.frontend.service.nodePort }}             # ⭐ CHANGE 5 digit port
