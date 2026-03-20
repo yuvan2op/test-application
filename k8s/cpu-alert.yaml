@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: backend-cpu-alert
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: cpu-alerts
+      rules:
+        - alert: HighBackendCPU
+          expr: sum(rate(container_cpu_usage_seconds_total{pod=~"backend.*"}[1m])) > 0.2
+          for: 30s
+          labels:
+            severity: critical
+          annotations:
+            summary: "High CPU usage on backend pod"
+            description: "Backend pod CPU usage is above threshold"
