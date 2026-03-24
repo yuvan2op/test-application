@@ -8,7 +8,7 @@ backend:
   service:
     type: NodePort
     port: 3000
-    nodePort: 30008
+    nodePort: 30018
 
 frontend:
   name: frontend
@@ -20,7 +20,7 @@ frontend:
   service:
     type: NodePort
     port: 80
-    nodePort: 30007
+    nodePort: 30017
 ingress:
   enabled: false
   host: test.local
