@@ -1,12 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service          # ⭐ CHANGE NAME
+  name: backend-service
 spec:
-  type: NodePort
+  # ─────────────────────────────────────────────────────────
+  # ClusterIP = INTERNAL ONLY.
+  # No port is punched through to the host machine.
+  # Only reachable from within the cluster — Traefik will
+  # route external traffic here via the Ingress rule.
+  # ─────────────────────────────────────────────────────────
+  type: ClusterIP
   selector:
-    app: backend                 # ⭐ MUST MATCH deployment label
+    app: backend            # Must exactly match deployment label
   ports:
-    - port: 3000                 # service port
-      targetPort: 3000           # container port
-      nodePort: 30008            # ⭐ CHANGE ANY 30000–32767
+    - port: 3000            # Port other services use to reach this
+      targetPort: 3000      # Port the container listens on

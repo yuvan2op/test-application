@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend                 # ⭐ CHANGE APP NAME HERE
+  name: backend
 spec:
-  replicas: 2                   # production minimum
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -11,34 +11,60 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: backend              # ⭐ CHANGE SAME NAME
+      app: backend
   template:
     metadata:
       labels:
-        app: backend            # ⭐ CHANGE SAME NAME
+        app: backend
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-        - name: backend         # ⭐ CHANGE
-          image: yuvan2op/test-backend:latest   # ⭐ CHANGE IMAGE
+        - name: backend
+          image: yuvan2op/test-backend:latest
           ports:
-            - containerPort: 3000               # ⭐ CHANGE APP PORT
+            - containerPort: 3000
+
+          # ─────────────────────────────────────────────────────────
+          # CPU & MEMORY LIMITS
+          #
+          # requests → what K8s GUARANTEES & reserves on the node
+          # limits   → hard ceiling; CPU is throttled, RAM kills pod
+          #
+          # 100m  = 0.1 vCPU  (1000m = 1 full core)
+          # 500m  = 0.5 vCPU  (safe burst for a Node.js API)
+          # 128Mi = 128 MiB   (warm Node.js idle footprint)
+          # 256Mi = 256 MiB   (double the request — safe ceiling)
+          # ─────────────────────────────────────────────────────────
           resources:
             requests:
               cpu: "100m"
               memory: "128Mi"
             limits:
-              cpu: "300m"
+              cpu: "500m"
               memory: "256Mi"
+
+          # ─────────────────────────────────────────────────────────
+          # READINESS PROBE
+          # Pod only receives traffic AFTER this returns HTTP 200.
+          # Prevents live traffic hitting a cold/starting container.
+          # ─────────────────────────────────────────────────────────
           readinessProbe:
             httpGet:
-              path: /health     # ⭐ CHANGE if needed
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 5
+              path: /api/health
+              port: 3000    
+            initialDelaySeconds: 5      # Wait 5s after container starts
+            periodSeconds: 5            # Re-check every 5s
+            failureThreshold: 3         # Mark unready after 3 failures
+
+          # ─────────────────────────────────────────────────────────
+          # LIVENESS PROBE
+          # If this fails, K8s RESTARTS the container.
+          # Catches deadlocks that don't crash the process.
+          # ─────────────────────────────────────────────────────────
           livenessProbe:
             httpGet:
-              path: /health     # ⭐ CHANGE if needed
+              path: /api/health
               port: 3000
-            initialDelaySeconds: 15
-            periodSeconds: 10
+            initialDelaySeconds: 15     # Give app full boot time first
+            periodSeconds: 10           # Re-check every 10s
+            failureThreshold: 3         # Restart after 3 consecutive fails
