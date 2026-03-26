@@ -23,6 +23,10 @@ spec:
           image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}   # ⭐ CHANGE IMAGE
           ports:
             - containerPort: {{ .Values.frontend.containerPort }}                 # ⭐ CHANGE
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
           resources:
             requests:
               cpu: "100m"
@@ -42,3 +46,7 @@ spec:
               port: 80
             initialDelaySeconds: 15
             periodSeconds: 10
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ .Release.Name }}-frontend-config

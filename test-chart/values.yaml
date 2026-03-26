@@ -1,6 +1,6 @@
 backend:
   name: backend
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: yuvan2op/test-backend
     tag: latest
@@ -12,7 +12,7 @@ backend:
 
 frontend:
   name: frontend
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: yuvan2op/test-frontend
     tag: latest
