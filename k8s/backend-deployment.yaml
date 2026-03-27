@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backend                 # ⭐ CHANGE APP NAME HERE
 spec:
-  replicas: 2                   # production minimum
+  replicas: 1                   # production minimum
   strategy:
     type: RollingUpdate
     rollingUpdate:
