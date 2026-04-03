@@ -3,15 +3,6 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    # ─────────────────────────────────────────────────────────
-    # k3s ships with Traefik as the built-in ingress controller.
-    # No installation needed — Traefik is already running.
-    #
-    # This annotation strips the /api prefix before forwarding
-    # to the backend. So:
-    #   incoming:  localhost/api/users
-    #   forwarded: backend-service:3000/users
-    # ─────────────────────────────────────────────────────────
     traefik.ingress.kubernetes.io/router.entrypoints: web
     nginx.ingress.kubernetes.io/rewrite-target: /$2     # kept for compatibility
 
@@ -21,13 +12,7 @@ spec:
   rules:
     - http:
         paths:
-
-          # ─────────────────────────────────────────────────────
-          # BACKEND ROUTE  →  localhost/api/...
-          # The regex capture group strips /api so your backend
-          # receives clean paths (e.g. /users, /products).
-          # MUST be listed before the frontend "/" catch-all.
-          # ─────────────────────────────────────────────────────
+          
           - path: /api(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -35,12 +20,7 @@ spec:
                 name: backend-service       # Must match backend-service.yaml
                 port:
                   number: 3000
-
-          # ─────────────────────────────────────────────────────
-          # FRONTEND ROUTE  →  localhost/
-          # Catches all remaining traffic and sends to Nginx.
-          # Must come AFTER the /api rule.
-          # ─────────────────────────────────────────────────────
+         
           - path: /
             pathType: Prefix
             backend:

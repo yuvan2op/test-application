@@ -23,18 +23,6 @@ spec:
           image: yuvan2op/test-backend:latest
           ports:
             - containerPort: 3000
-
-          # ─────────────────────────────────────────────────────────
-          # CPU & MEMORY LIMITS
-          #
-          # requests → what K8s GUARANTEES & reserves on the node
-          # limits   → hard ceiling; CPU is throttled, RAM kills pod
-          #
-          # 100m  = 0.1 vCPU  (1000m = 1 full core)
-          # 500m  = 0.5 vCPU  (safe burst for a Node.js API)
-          # 128Mi = 128 MiB   (warm Node.js idle footprint)
-          # 256Mi = 256 MiB   (double the request — safe ceiling)
-          # ─────────────────────────────────────────────────────────
           resources:
             requests:
               cpu: "100m"
@@ -42,12 +30,6 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
-
-          # ─────────────────────────────────────────────────────────
-          # READINESS PROBE
-          # Pod only receives traffic AFTER this returns HTTP 200.
-          # Prevents live traffic hitting a cold/starting container.
-          # ─────────────────────────────────────────────────────────
           readinessProbe:
             httpGet:
               path: /api/health
@@ -55,12 +37,6 @@ spec:
             initialDelaySeconds: 5      # Wait 5s after container starts
             periodSeconds: 5            # Re-check every 5s
             failureThreshold: 3         # Mark unready after 3 failures
-
-          # ─────────────────────────────────────────────────────────
-          # LIVENESS PROBE
-          # If this fails, K8s RESTARTS the container.
-          # Catches deadlocks that don't crash the process.
-          # ─────────────────────────────────────────────────────────
           livenessProbe:
             httpGet:
               path: /api/health
