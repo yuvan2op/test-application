@@ -3,12 +3,6 @@ kind: Service
 metadata:
   name: backend-service
 spec:
-  # ─────────────────────────────────────────────────────────
-  # ClusterIP = INTERNAL ONLY.
-  # No port is punched through to the host machine.
-  # Only reachable from within the cluster — Traefik will
-  # route external traffic here via the Ingress rule.
-  # ─────────────────────────────────────────────────────────
   type: ClusterIP
   selector:
     app: backend            # Must exactly match deployment label

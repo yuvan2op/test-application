@@ -1,0 +1,20 @@
+k3s-deployment/
+│
+├── deployments/
+│   ├── backend-deployment.yaml
+│   ├── backend-service.yaml
+│   ├── frontend-deployment.yaml
+│   └── frontend-service.yaml
+│
+├── ingress/
+│   └── ingress.yaml
+│
+├── autoscaling/
+│   ├── hpa-backend.yaml
+│   ├── hpa-frontend.yaml
+│   └── keda/
+│       └── keda-backend.yaml
+│
+└── scripts/
+    ├── apply-all.sh
+    └── scale.sh

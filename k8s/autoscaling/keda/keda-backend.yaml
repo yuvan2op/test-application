@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: backend-scaledobject
+spec:
+  scaleTargetRef:
+    name: backend
+  minReplicaCount: 2
+  maxReplicaCount: 15
+  cooldownPeriod: 180
+  triggers:
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "60"
+
+    - type: cron                          # scale up during business hours
+      timezone: Asia/Kolkata
+      start: 30 8 * * 1-5               # 08:30 Mon–Fri
+      end:   0  20 * * 1-5              # 20:00 Mon–Fri
+      desiredReplicas: "4"
