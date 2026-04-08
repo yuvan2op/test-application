@@ -15,7 +15,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://<your-node-ip>';
+const BASE_URL = 'http://172.17.118.152'; // replace with your k3s node IP  
 
 export default function () {
   const res = http.get(`${BASE_URL}/api/health`);

@@ -14,16 +14,13 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://172.17.118.152';
+const BASE_URL = 'http://localhost:3456';
 
 export default function () {
   const responses = http.batch([
-    ['GET', `${BASE_URL}/api`],
-    ['GET', `${BASE_URL}/api/health`],
+    ['GET', `${BASE_URL}/users`],
   ]);
 
-  check(responses[0], { 'frontend ok': (r) => r.status === 200 });
-  check(responses[1], { 'backend ok':  (r) => r.status === 200 });
-
+  check(responses[0], { 'users fetched': (r) => r.status === 200 && r.json().length > 0 });
   sleep(0.5);
 }
