@@ -1,16 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: test-k8sfrontend-service
 spec:
-  # ─────────────────────────────────────────────────────────
-  # ClusterIP = INTERNAL ONLY.
-  # No port is punched through to the host machine.
-  # Traefik routes external traffic here via Ingress rule.
-  # ─────────────────────────────────────────────────────────
-  type: ClusterIP
+  type: NodePort
   selector:
-    app: frontend           # Must exactly match deployment label
+    app: test-k8sfrontend           # Must exactly match deployment label
   ports:
     - port: 80
       targetPort: 80
+      nodePort: 30080

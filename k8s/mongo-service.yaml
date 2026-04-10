@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-mongo-service
+spec:
+  type: ClusterIP
+  selector:
+    app: test-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017

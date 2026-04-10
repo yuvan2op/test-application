@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: test-k8sapi-service
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
-    app: backend            # Must exactly match deployment label
+    app: test-k8sapi
   ports:
     - port: 3000            # Port other services use to reach this
       targetPort: 3000      # Port the container listens on
+      nodePort: 30081

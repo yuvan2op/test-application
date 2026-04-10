@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: test-k8sapi
 spec:
   strategy:
     type: RollingUpdate
@@ -10,18 +10,26 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: backend
+      app: test-k8sapi
   template:
     metadata:
       labels:
-        app: backend
+        app: test-k8sapi
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-        - name: backend
-          image: yuvan2op/test-backend:latest
+        - name: test-k8sapi
+          image: yuvan2op/test-k8sapi:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
+          env:
+            - name: MONGO_URL
+              value: "mongodb://test-mongo-service:27017/testdb"
+            - name: DB_NAME
+              value: "testdb"
+            - name: JWT_SECRET
+              value: "your-secret-key"
           resources:
             requests:
               cpu: "100m"

@@ -1,9 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: test-k8sfrontend
 spec:
-  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -11,32 +10,19 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: frontend
+      app: test-k8sfrontend
   template:
     metadata:
       labels:
-        app: frontend
+        app: test-k8sfrontend
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-        - name: frontend
-          image: yuvan2op/test-frontend:latest
+        - name: test-k8sfrontend
+          image: yuvan2op/test-k8sfrontend:latest
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80
-
-          # ─────────────────────────────────────────────────────────
-          # CPU & MEMORY LIMITS
-          #
-          # Frontend (Nginx serving static files) is very light.
-          # Significantly lower than the backend.
-          # If you use SSR (e.g. Next.js), raise cpu limit to 500m
-          # and memory limit to 512Mi.
-          #
-          # 50m   = 0.05 vCPU  (static file serving is near-zero CPU)
-          # 200m  = 0.2 vCPU   (generous burst ceiling for Nginx)
-          # 64Mi  = 64 MiB     (Nginx idle RAM footprint)
-          # 128Mi = 128 MiB    (double the request — safe ceiling)
-          # ─────────────────────────────────────────────────────────
+            - containerPort: 80          
           resources:
             requests:
               cpu: "50m"
@@ -45,11 +31,6 @@ spec:
               cpu: "200m"
               memory: "128Mi"
 
-          # ─────────────────────────────────────────────────────────
-          # READINESS PROBE
-          # Checks root "/" — confirms Nginx is up before routing
-          # traffic to this pod.
-          # ─────────────────────────────────────────────────────────
           readinessProbe:
             httpGet:
               path: /
@@ -57,12 +38,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
-
-          # ─────────────────────────────────────────────────────────
-          # LIVENESS PROBE
-          # Restarts the container if Nginx stops responding —
-          # e.g. a worker process crash or config error.
-          # ─────────────────────────────────────────────────────────
+          
           livenessProbe:
             httpGet:
               path: /
