@@ -5,3 +5,4 @@ export default function () {
   http.get('http://172.17.118.152');
   sleep(1);
 }
+

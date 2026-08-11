@@ -2,18 +2,33 @@
 <html>
 <head>
   <title>K3s Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    button { padding: 10px 16px; font-size: 16px; }
+    #result { margin-top: 12px; font-weight: bold; }
+  </style>
 </head>
 <body>
   <h1>Frontend Running ✅</h1>
   <button onclick="callApi()">Call Backend</button>
 
-  <p id="result"></p>
+  <p id="result">No request yet.</p>
+  <p id="counter">Click count: 0</p>
 
   <script>
+    let clickCount = 0;
+
     async function callApi() {
-      const res = await fetch("/api");
-      const data = await res.json();
-      document.getElementById("result").innerText = data.message;
+      clickCount += 1;
+      document.getElementById("counter").innerText = `Click count: ${clickCount}`;
+
+      try {
+        const res = await fetch("/api");
+        const data = await res.json();
+        document.getElementById("result").innerText = data.message;
+      } catch (err) {
+        document.getElementById("result").innerText = `Request failed: ${err.message}`;
+      }
     }
   </script>
 </body>

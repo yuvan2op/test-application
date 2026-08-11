@@ -17,7 +17,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: backend-service       # Must match backend-service.yaml
+                name: backend       # Must match backend-service.yaml
                 port:
                   number: 3000
          

@@ -6,7 +6,7 @@ export const options = {
   duration: '30s',
 };
 
-const BASE_URL = 'http://172.17.118.152';  // replace with your k3s node IP
+const BASE_URL = 'https://k3-kms.v-accel.ai';  // replace with your k3s node IP
 
 export default function () {
   // test frontend
